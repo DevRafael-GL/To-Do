@@ -182,7 +182,6 @@ const dropZones = document.querySelectorAll(".dropZone");
 
 cards.forEach((card) => {
   card.addEventListener("dragstart", dragstart);
-  card.addEventListener("drag", drag);
   card.addEventListener("dragend", dragend);
 });
 
