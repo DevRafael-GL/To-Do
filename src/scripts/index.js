@@ -103,7 +103,7 @@ function renderTasksTodo() {
   const tasksToDoTemplate = db_tasksToDo
     .map(
       (task) => `
-    <div id="${task.task}" draggable="true" class="card ${task.priority} p-4 rounded">
+    <div id="${task.task}" draggable="true" class="card hover:cursor-move ${task.priority} p-4 rounded">
     <div class="flex justify-between items-center px-4">
       <p>${task.task}</p>
       <button onclick="handleDelete('${task.task}')"><img src="./src/assets/excluir.png" alt="excluir" /></button>
@@ -160,7 +160,11 @@ function deleteTask(task) {
   const findByTaskDoing = db_tasksDoing.filter((item) => item.task !== task);
   const findByTaskDone = db_tasksDone.filter((item) => item.task !== task);
 
-  console.log(db_tasksDone === findByTaskDone);
+  const confirmation = confirm("Do you really want to delete this task?");
+
+  if (!confirmation) {
+    return;
+  }
 
   db_tasksToDo = findByTaskTodo;
   setLocalStorageTaskToDo();
