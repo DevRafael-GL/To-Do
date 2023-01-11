@@ -39,13 +39,13 @@ function submitForm(event) {
   event.preventDefault();
   let priority = "bg-emerald-500";
   const findByTaskTodo = db_tasksToDo.find(
-    (item) => item.task === form[0].value
+    (item) => item.task.toLowerCase() === form[0].value.toLowerCase()
   );
   const findByTaskDoing = db_tasksDoing.find(
-    (item) => item.task === form[0].value
+    (item) => item.task.toLowerCase() === form[0].value.toLowerCase()
   );
   const findByTaskDone = db_tasksDone.find(
-    (item) => item.task === form[0].value
+    (item) => item.task.toLowerCase() === form[0].value.toLowerCase()
   );
 
   if (findByTaskTodo || findByTaskDoing || findByTaskDone) {
@@ -175,7 +175,7 @@ function deleteTask(task) {
   db_tasksDone = findByTaskDone;
   setLocalStorageTaskDone();
 
-  // location.reload();
+  location.reload();
   readTask();
 }
 
