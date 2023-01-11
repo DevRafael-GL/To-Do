@@ -88,52 +88,36 @@ function submitForm(event) {
 function createTask(task) {
   db_tasksToDo.push(task);
   setLocalStorageTaskToDo();
-
-  location.reload();
+  form[0].value = "";
   readTask();
 }
 
 // RENDER CARDS
 function readTask() {
-  renderTasksTodo();
+  renderTasks();
+  eventsDragAndDrop();
 }
 readTask();
 
-function renderTasksTodo() {
-  const tasksToDoTemplate = db_tasksToDo
-    .map(
-      (task) => `
+function renderTasks() {
+  const taskTemplate = (task) => `
     <div id="${task.task}" draggable="true" class="card hover:cursor-move ${task.priority} p-4 rounded">
-    <div class="flex justify-between items-center px-4">
-      <p>${task.task}</p>
-      <button onclick="handleDelete('${task.task}')"><img src="./src/assets/excluir.png" alt="excluir" /></button>
-    </div>
-  </div>`
-    )
+      <div class="flex justify-between items-center px-4">
+        <p>${task.task}</p>
+        <button onclick="handleDelete('${task.task}')"><img src="./src/assets/excluir.png" alt="excluir" /></button>
+      </div>
+    </div>`;
+
+  const tasksToDoTemplate = db_tasksToDo
+    .map((task) => taskTemplate(task))
     .join("");
 
   const tasksDoingTemplate = db_tasksDoing
-    .map(
-      (task) => `
-    <div id="${task.task}" draggable="true" class="card ${task.priority} p-4 rounded">
-    <div class="flex justify-between items-center px-4">
-      <p>${task.task}</p>
-      <button onclick="handleDelete('${task.task}')"><img src="./src/assets/excluir.png" alt="excluir" /></button>
-    </div>
-  </div>`
-    )
+    .map((task) => taskTemplate(task))
     .join("");
 
   const tasksDoneTemplate = db_tasksDone
-    .map(
-      (task) => `
-    <div id="${task.task}" draggable="true" class="card ${task.priority} p-4 rounded">
-    <div class="flex justify-between items-center px-4">
-      <p>${task.task}</p>
-      <button onclick="handleDelete('${task.task}')"><img src="./src/assets/excluir.png" alt="excluir" /></button>
-    </div>
-  </div>`
-    )
+    .map((task) => taskTemplate(task))
     .join("");
 
   toDo.innerHTML = tasksToDoTemplate;
@@ -143,12 +127,10 @@ function renderTasksTodo() {
 }
 
 // UPDATE TASK
-function updateTask(index, newTask) {
-  db_tasksToDo[index].task = newTask;
-
-  location.reload();
-  readTask();
-}
+// function updateTask(index, newTask) {
+//   db_tasksToDo[index].task = newTask;
+//   readTask();
+// }
 
 // DELETE TASK
 function handleDelete(elementTask) {
@@ -175,19 +157,21 @@ function deleteTask(task) {
   db_tasksDone = findByTaskDone;
   setLocalStorageTaskDone();
 
-  location.reload();
   readTask();
 }
 
 // DRAG AND DROP
 
-const cards = document.querySelectorAll(".card");
-const dropZones = document.querySelectorAll(".dropZone");
+function eventsDragAndDrop() {
+  const cards = document.querySelectorAll(".card");
 
-cards.forEach((card) => {
-  card.addEventListener("dragstart", dragstart);
-  card.addEventListener("dragend", dragend);
-});
+  cards.forEach((card) => {
+    card.addEventListener("dragstart", dragstart);
+    card.addEventListener("dragend", dragend);
+  });
+}
+
+const dropZones = document.querySelectorAll(".dropZone");
 
 function dragstart() {
   dropZones.forEach((dropZone) => (dropZone.style.background = "#eee1"));
@@ -305,7 +289,7 @@ function finishTasks() {
   if (result) {
     db_tasksDone = [];
     setLocalStorageTaskDone();
-    location.reload();
+    readTask();
   }
 }
 
